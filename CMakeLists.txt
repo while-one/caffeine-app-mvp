@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.23)
 
 # Placeholder project name and version
 project(caffeine-template
-        VERSION 0.1.3
+        VERSION 0.0.1
         LANGUAGES C
         DESCRIPTION "Replace me with a good description"
         HOMEPAGE_URL "https://github.com/while-one/caffeine-template"
