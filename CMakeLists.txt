@@ -37,20 +37,41 @@ include(FetchContent)
 FetchContent_Declare(
     caffeine-hal-ports
     GIT_REPOSITORY https://github.com/while-one/caffeine-hal-ports.git
-    GIT_TAG        main # Or a specific tag/branch like refactor-build
+    GIT_TAG        v0.2.3
 )
 FetchContent_MakeAvailable(caffeine-hal-ports)
 
 # --- 3. Source Collection ---
-set(APP_SOURCES src/main.c)
+set(APP_SOURCES 
+    src/main.c
+    src/app/app_main.c
+    src/bsp/bsp_led.c
+)
 
 # --- 4. Application Executable ---
 add_executable(${PROJECT_NAME} ${APP_SOURCES})
+
 target_compile_options(${PROJECT_NAME} PRIVATE ${CAFFEINE_COMPILE_OPTIONS})
+target_include_directories(${PROJECT_NAME} PRIVATE 
+    src/app
+    src/bsp
+)
+
+# Inherit HAL and Port-specific flags (CPU, FPU, includes, linker scripts)
 target_link_libraries(${PROJECT_NAME} PRIVATE caffeine::hal-ports)
+
+# Inject Board ID as a preprocessor definition if set
+if(CFN_APP_BOARD_ID)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE "${CFN_APP_BOARD_ID}")
+endif()
 
 # 5. Generate hex/bin and print size
 cfn_add_firmware(${PROJECT_NAME})
+
+# --- 6. Unit Testing ---
+if(CAFFEINE_PORT_BUILD_TESTS)
+    add_subdirectory(tests)
+endif()
 
 # ==============================================================================
 # Tooling: Code Formatting & Static Analysis
@@ -73,4 +94,4 @@ endif()
 
 # 2. Static Analysis (analyze)
 # This will be refined once the full source tree is created in Phase 2/3
-add_custom_target(${PROJECT_NAME-analyze} COMMENT "Running full static analysis suite...")
+add_custom_target(${PROJECT_NAME}-analyze COMMENT "Running full static analysis suite...")
