@@ -13,6 +13,8 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
+include(${PROJECT_SOURCE_DIR}/caffeine-build/cmake/CaffeineMacros.cmake)
+
 # User-configurable flags
 option(CAFFEINE_WARNINGS_AS_ERRORS "Treat compiler warnings as errors" ON)
 set(CAFFEINE_OPTIMIZATION_LEVEL "-Os" CACHE STRING "Compiler optimization level")
@@ -36,6 +38,8 @@ FetchContent_Declare(
     caffeine-hal-ports
     GIT_REPOSITORY https://github.com/while-one/caffeine-hal-ports.git
     GIT_TAG        v0.2.3
+    GIT_SUBMODULES
+    "caffeine-build"
 )
 FetchContent_MakeAvailable(caffeine-hal-ports)
 
