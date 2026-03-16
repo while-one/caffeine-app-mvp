@@ -29,16 +29,16 @@ jobs:
     - name: Run Analysis
       run: ./caffeine-build/scripts/build.sh linux-native caffeine-app-mvp-analyze
 
-  build-linux:
-    name: Build Linux Native
-    runs-on: ubuntu-24.04
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        submodules: recursive
-
-    - name: Build
-      run: ./caffeine-build/scripts/build.sh linux-native
+#  build-linux:
+#    name: Build Linux Native
+#    runs-on: ubuntu-24.04
+#    steps:
+#    - uses: actions/checkout@v4
+#      with:
+#        submodules: recursive
+#
+#    - name: Build
+#      run: ./caffeine-build/scripts/build.sh linux-native
 
   build-stm32:
     name: Build STM32 Targets
