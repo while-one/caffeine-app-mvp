@@ -15,9 +15,13 @@
   </a>
 </p>
 
+---
+
 # Caffeine App MVP
 
 The **Caffeine App MVP** is a reference implementation of a Minimum Viable Product (MVP) application built using the **Caffeine Framework**. It demonstrates a clean separation of concerns between hardware-agnostic application logic, a Board Support Package (BSP) layer, and the underlying Hardware Abstraction Layer (HAL).
+
+---
 
 ## Features
 
@@ -25,6 +29,7 @@ The **Caffeine App MVP** is a reference implementation of a Minimum Viable Produ
 - **Abstracted BSP:** A clean Board Support Package (`src/bsp`) abstracts the physical LED hardware, allowing the same app logic to run on different boards.
 - **Unified Build Orchestrator:** Leverages the `caffeine-build` submodule for containerized, cross-platform builds.
 - **Unit Testing:** Includes a GTest-based testing infrastructure for host-side verification.
+---
 
 ## Directory Structure
 
@@ -43,7 +48,7 @@ caffeine-app-mvp/
 ├── tests/                   # Unit test directory
 └── caffeine-build/          # Submodule (Build System & Scripts)
 ```
-
+---
 ## Quick Start
 
 ### 1. Build for STM32 (Containerized)
@@ -81,6 +86,34 @@ Example configuration in a preset:
 ```
 
 The `CFN_APP_BOARD_ID` is a string injected as a C preprocessor definition (e.g., `#define BLINKY_STM32F407VG_HWV0001`), allowing the BSP to identify the board variant. Other `CFN_HAL_*` values are injected into the vendor HAL configuration, allowing for easy board-specific tuning.
+
+---
+## Support the Gallery
+
+While this library is no Mondrian, it deals with a different form of **abstraction art**. Hardware abstraction is a craft of its own—one that keeps your application code portable and your debugging sessions short.
+
+Whether **Caffeine** is fueling an elegant embedded project or just helping you wake up your hardware, you can contribute in the following ways:
+
+* **Star & Share:** If you find this project useful, give it a ⭐ on GitHub and share it with your fellow firmware engineers. It helps others find the library and grows the Caffeine community.
+* **Show & Tell:** If you are using Caffeine in a project (personal or professional), **let me know!** Hearing how it's being used is a huge motivator.
+* **Propose Features:** If the library is missing a specific "brushstroke," let's design the interface together.
+* **Port New Targets:** Help us expand the collection by porting the HAL to new silicon or peripheral sets.
+* **Expand the HIL Lab:** Contributions go primarily toward acquiring new development boards. These serve as dedicated **Hardware-in-the-Loop** test targets, ensuring every commit remains rock-solid across our entire fleet of supported hardware.
+
+**If my projects helped you, feel free to buy me a brew. Or if it caused you an extra debugging session, open a PR!**
+
+<a href="https://www.buymeacoffee.com/whileone" target="_blank">
+  <img src="https://img.shields.io/badge/Caffeine%20me--0077ff?style=for-the-badge&logo=buy-me-a-coffee&logoColor=white" 
+       height="40" 
+       style="border-radius: 5px;">
+</a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="https://github.com/sponsors/whileone" target="_blank">
+<img src="https://img.shields.io/badge/Sponsor--ea4aaa?style=for-the-badge&logo=github-sponsors" height="40" style="border-radius: 5px;"> </a>&nbsp;&nbsp;&nbsp;
+<a href="hhttps://github.com/while-one/caffeine-hal/compare" target="_blank">
+<img src="https://img.shields.io/badge/Open%20a%20PR--orange?style=for-the-badge&logo=github&logoColor=white" height="40" style="border-radius: 5px;">
+</a>
+
+---
 
 ## License
 
