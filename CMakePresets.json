@@ -1,0 +1,46 @@
+{
+  "version": 4,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 23,
+    "patch": 0
+  },
+  "include": [
+    "caffeine-build/cmake/presets/base.json",
+    "caffeine-build/cmake/presets/stm32/stm32f4.json",
+    "caffeine-build/cmake/presets/posix/linux.json",
+    "caffeine-build/cmake/presets/mock/tests.json"
+  ],
+  "configurePresets": [
+    {
+      "name": "blinky-board-ex1",
+      "displayName": "Blinky Example 1 (STM32F407)",
+      "inherits": "stm32f407-release",
+      "binaryDir": "${sourceDir}/build/blinky-board-ex1",
+      "cacheVariables": {
+        "CFN_APP_BOARD_ID": "BLINKY_STM32F407VG_HWV0001",
+        "CFN_HAL_CLOCK_HSE_HZ": "8000000",
+        "CFN_HAL_CLOCK_LSE_HZ": "32768",
+        "CFN_HAL_POWER_VDD_MV": "3300"
+      }
+    },
+    {
+      "name": "blinky-board-ex2",
+      "displayName": "Blinky Example 2 (STM32F417VG)",
+      "inherits": "stm32f417vg-release",
+      "binaryDir": "${sourceDir}/build/blinky-board-ex2",
+      "cacheVariables": {
+        "CFN_APP_BOARD_ID": "BLINKY_STM32F417VG_HWV0001"
+      }
+    },
+    {
+      "name": "tests-native-app",
+      "displayName": "MVP Unit Tests (Native GTest)",
+      "inherits": "tests-native",
+      "binaryDir": "${sourceDir}/build/tests-native-app",
+      "cacheVariables": {
+        "PROJECT_NAME": "caffeine-app-mvp"
+      }
+    }
+  ]
+}

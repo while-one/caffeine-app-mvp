@@ -4,61 +4,114 @@
   </a>
 </p>
 
-
-
 <p align="center">
   <img src="https://img.shields.io/badge/C-11-blue.svg?style=flat-square&logo=c" alt="C11">
   <img src="https://img.shields.io/badge/CMake-%23008FBA.svg?style=flat-square&logo=cmake&logoColor=white" alt="CMake">
-  <a href="https://github.com/while-one/caffeine-hal/tags">
-    <img src="https://img.shields.io/github/v/tag/while-one/caffeine-hal?style=flat-square&label=Release" alt="Latest Release">
+  <a href="https://github.com/while-one/caffeine-app-mvp/actions/workflows/ci.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/while-one/caffeine-app-mvp/ci.yml?style=flat-square&branch=main" alt="CI Status">
   </a>
-  <a href="https://github.com/while-one/caffeine-hal/actions/workflows/ci.yml">
-    <img src="https://img.shields.io/github/actions/workflow/status/while-one/caffeine-hal/ci.yml?style=flat-square&branch=main" alt="CI Status">
-  </a>
-  <a href="https://github.com/while-one/caffeine-hal/commits/main">
-    <img src="https://img.shields.io/github/last-commit/while-one/caffeine-hal.svg?style=flat-square" alt="Last Commit">
-  </a>
-  <a href="https://github.com/while-one/caffeine-hal/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/while-one/caffeine-hal?style=flat-square&color=blue" alt="License: MIT">
+  <a href="https://github.com/while-one/caffeine-app-mvp/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/while-one/caffeine-app-mvp?style=flat-square&color=blue" alt="License: MIT">
   </a>
 </p>
 
-# Caffeine-Template
+---
 
-This is the foundational template repository for all new components within the **Caffeine Framework** ecosystem (e.g., new hardware ports, middleware libraries, and application layers).
+# Caffeine App MVP
 
-## Shared Ecosystem Standards
-
-By instantiating a repository from this template, you inherit the framework's strict coding standards and CI infrastructure:
-
-*   **Formatting (`config/.clang-format`):** Enforces a 120-column limit, 4-space indentation, and Allman-style braces.
-*   **Static Analysis (`config/.clang-tidy`):** Enforces strict C11 compliance, memory safety rules (no dynamic allocation), and best practices for embedded systems.
-*   **GitHub Infrastructure (`.github/`):** Pre-configured Pull Request templates, repository ownership rules, and baseline Continuous Integration workflows using optimized Docker containers.
-
-## The Caffeine Framework Layers
-
-The framework is composed of the following distinct layers:
-
-1.  **Generic Interface ([`caffeine-hal`](https://github.com/while-one/caffeine-hal)):** Header-only definitions of the Hardware Abstraction Layer and Virtual Method Tables (VMTs).
-2.  **Hardware Ports ([`caffeine-hal-ports`](https://github.com/while-one/caffeine-hal-ports)):** The concrete implementations of the HAL for specific vendors (e.g., STM32, NXP, nRF, TI) and OS environments (Linux POSIX). It encapsulates vendor SDKs and provides modern CMake cross-compilation presets.
-3.  **Middleware (TBD):** Device drivers (e.g., displays, sensors) and protocols (e.g., Modbus, USB stacks) that build strictly upon the generic `caffeine-hal` interface, remaining completely agnostic to the underlying hardware.
-4.  **Application (TBD):** The top-level business logic, state machines, and system orchestration that utilize the middleware and HAL interfaces.
-
-## Next Steps for New Components
-
-1.  Update this `README.md` to describe the specific purpose of the new repository (e.g., "STM32 Porting Layer", "Modbus Middleware").
-2.  Review and customize `.github/workflows/ci.yml` if your component requires a specific cross-compilation matrix (like ARM GCC) rather than native testing.
-3.  Add the specific source files and CMake configuration (e.g., `CMakePresets.json`) as outlined in the [Caffeine-HAL Architecture Guide](https://github.com/while-one/caffeine-hal).
+The **Caffeine App MVP** is a reference implementation of a Minimum Viable Product (MVP) application built using the **Caffeine Framework**. It demonstrates a clean separation of concerns between hardware-agnostic application logic, a Board Support Package (BSP) layer, and the underlying Hardware Abstraction Layer (HAL).
 
 ---
 
-## Support
+## Features
 
-They say dealing with abstraction is a form of art, so I suppose that makes me an artist? Whether this caffeine fuels an elegant HAL or a deep debugging session, I appreciate you being part of the gallery.
+- **Hardware Agnostic Logic:** The core application logic (`src/app`) remains completely unaware of physical pin mappings or vendor-specific registers.
+- **Abstracted BSP:** A clean Board Support Package (`src/bsp`) abstracts the physical LED hardware, allowing the same app logic to run on different boards.
+- **Unified Build Orchestrator:** Leverages the `caffeine-build` submodule for containerized, cross-platform builds.
+- **Unit Testing:** Includes a GTest-based testing infrastructure for host-side verification.
+---
 
-If my projects helped you, buy me a brew or if the opposite open a PR!
+## Directory Structure
 
-<a href="https://www.buymeacoffee.com/whileone" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+```text
+caffeine-app-mvp/
+├── CMakeLists.txt           # Main project definition
+├── CMakePresets.json        # Target definitions (STM32, Linux)
+├── src/
+│   ├── app/                 # Application Logic (Hardware Agnostic)
+│   │   ├── app_main.c       # The main blink loop
+│   │   └── app_main.h
+│   ├── bsp/                 # Board Support Package (Hardware Specific)
+│   │   ├── bsp_led.c        # Implementation mapping HAL to physical pins
+│   │   └── bsp_led.h        # Abstract LED interface
+│   └── main.c               # Entry point, initializes BSP, calls app_main
+├── tests/                   # Unit test directory
+└── caffeine-build/          # Submodule (Build System & Scripts)
+```
+---
+## Quick Start
+
+### 1. Build for STM32 (Containerized)
+To build for a specific STM32 target (e.g., `blinky-board-ex1` using an F407):
+
+```bash
+./caffeine-build/scripts/build.sh blinky-board-ex1
+```
+
+### 2. Build and Run Unit Tests (Native)
+To build and run the unit tests on your host machine:
+
+```bash
+./caffeine-build/scripts/build.sh tests-native
+```
+
+### 3. Build for Linux Native
+To build the application as a native POSIX binary:
+
+```bash
+./caffeine-build/scripts/build.sh linux-native
+```
+
+## Hardware Parameter Overrides
+This application demonstrates how to override default hardware parameters directly from `CMakePresets.json`.
+
+Example configuration in a preset:
+```json
+"cacheVariables": {
+  "CFN_APP_BOARD_ID": "BLINKY_STM32F407VG_HWV0001",
+  "CFN_HAL_CLOCK_HSE_HZ": "8000000",
+  "CFN_HAL_CLOCK_LSE_HZ": "32768",
+  "CFN_HAL_POWER_VDD_MV": "3300"
+}
+```
+
+The `CFN_APP_BOARD_ID` is a string injected as a C preprocessor definition (e.g., `#define BLINKY_STM32F407VG_HWV0001`), allowing the BSP to identify the board variant. Other `CFN_HAL_*` values are injected into the vendor HAL configuration, allowing for easy board-specific tuning.
+
+---
+## Support the Gallery
+
+While this library is no Mondrian, it deals with a different form of **abstraction art**. Hardware abstraction is a craft of its own—one that keeps your application code portable and your debugging sessions short.
+
+Whether **Caffeine** is fueling an elegant embedded project or just helping you wake up your hardware, you can contribute in the following ways:
+
+* **Star & Share:** If you find this project useful, give it a ⭐ on GitHub and share it with your fellow firmware engineers. It helps others find the library and grows the Caffeine community.
+* **Show & Tell:** If you are using Caffeine in a project (personal or professional), **let me know!** Hearing how it's being used is a huge motivator.
+* **Propose Features:** If the library is missing a specific "brushstroke," let's design the interface together.
+* **Port New Targets:** Help us expand the collection by porting the HAL to new silicon or peripheral sets.
+* **Expand the HIL Lab:** Contributions go primarily toward acquiring new development boards. These serve as dedicated **Hardware-in-the-Loop** test targets, ensuring every commit remains rock-solid across our entire fleet of supported hardware.
+
+**If my projects helped you, feel free to buy me a brew. Or if it caused you an extra debugging session, open a PR!**
+
+<a href="https://www.buymeacoffee.com/whileone" target="_blank">
+  <img src="https://img.shields.io/badge/Caffeine%20me--0077ff?style=for-the-badge&logo=buy-me-a-coffee&logoColor=white" 
+       height="40" 
+       style="border-radius: 5px;">
+</a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="https://github.com/sponsors/whileone" target="_blank">
+<img src="https://img.shields.io/badge/Sponsor--ea4aaa?style=for-the-badge&logo=github-sponsors" height="40" style="border-radius: 5px;"> </a>&nbsp;&nbsp;&nbsp;
+<a href="hhttps://github.com/while-one/caffeine-hal/compare" target="_blank">
+<img src="https://img.shields.io/badge/Open%20a%20PR--orange?style=for-the-badge&logo=github&logoColor=white" height="40" style="border-radius: 5px;">
+</a>
 
 ---
 
