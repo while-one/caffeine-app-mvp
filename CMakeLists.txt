@@ -38,7 +38,7 @@ include(FetchContent)
 FetchContent_Declare(
     caffeine-hal-ports
     GIT_REPOSITORY https://github.com/while-one/caffeine-hal-ports.git
-    GIT_TAG        v0.2.4
+    GIT_TAG        v0.2.5
     GIT_SUBMODULES
     "caffeine-build"
 )
@@ -72,14 +72,8 @@ endif()
 cfn_add_firmware(${PROJECT_NAME})
 
 # --- 6. Unit Testing ---
-if(PROJECT_IS_TOP_LEVEL)
-    set(DEFAULT_BUILD_TESTS ON)
-else()
-    set(DEFAULT_BUILD_TESTS OFF)
-endif()
-option(CFN_APP_MVP_BUILD_TESTS "Build the unit tests for MVP app" ${DEFAULT_BUILD_TESTS})
-
-if(CFN_APP_MVP_BUILD_TESTS)
+option(CFN_APP_MVP_BUILD_TESTS "Build the unit tests for MVP app" OFF)
+if(PROJECT_IS_TOP_LEVEL AND CFN_APP_MVP_BUILD_TESTS)
     include(CTest)
     if(BUILD_TESTING)
         add_subdirectory(tests)
