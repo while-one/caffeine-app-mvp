@@ -72,6 +72,18 @@ To build the application as a native POSIX binary:
 ./caffeine-build/scripts/build.sh linux-native
 ```
 
+---
+
+## Development & Analysis
+
+The project includes built-in targets for maintaining code quality:
+
+*   **Format Code:** `cmake --build build/tests-native-app --target caffeine-app-mvp-format`
+*   **Run Static Analysis:** `cmake --build build/tests-native-app --target caffeine-app-mvp-analyze`
+*   **Run Unit Tests:** `cmake --build build/tests-native-app --target caffeine-app-mvp-test`
+
+---
+
 ## Hardware Parameter Overrides
 This application demonstrates how to override default hardware parameters directly from `CMakePresets.json`.
 
@@ -107,9 +119,9 @@ Whether **Caffeine** is fueling an elegant embedded project or just helping you 
        height="40" 
        style="border-radius: 5px;">
 </a>&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="https://github.com/sponsors/whileone" target="_blank">
+<a href="https://github.com/sponsors/while-one" target="_blank">
 <img src="https://img.shields.io/badge/Sponsor--ea4aaa?style=for-the-badge&logo=github-sponsors" height="40" style="border-radius: 5px;"> </a>&nbsp;&nbsp;&nbsp;
-<a href="hhttps://github.com/while-one/caffeine-hal/compare" target="_blank">
+<a href="https://github.com/while-one/caffeine-app-mvp/compare" target="_blank">
 <img src="https://img.shields.io/badge/Open%20a%20PR--orange?style=for-the-badge&logo=github&logoColor=white" height="40" style="border-radius: 5px;">
 </a>
 

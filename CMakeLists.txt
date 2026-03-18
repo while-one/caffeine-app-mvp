@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.23)
 
 # Placeholder project name and version
 project(caffeine-app-mvp
-        VERSION 0.1.0
+        VERSION 0.0.1
         LANGUAGES C ASM
         DESCRIPTION "Minimum Viable Product Blinky Application"
         HOMEPAGE_URL "https://github.com/while-one/caffeine-app-mvp"
@@ -20,6 +20,7 @@ option(CAFFEINE_WARNINGS_AS_ERRORS "Treat compiler warnings as errors" ON)
 set(CAFFEINE_OPTIMIZATION_LEVEL "-Os" CACHE STRING "Compiler optimization level")
 
 set(CAFFEINE_COMPILE_OPTIONS
+    -pedantic-errors
     -Wall -Wextra -Wpedantic -Wshadow
     -ffunction-sections -fdata-sections
     ${CAFFEINE_OPTIMIZATION_LEVEL}
@@ -37,7 +38,7 @@ include(FetchContent)
 FetchContent_Declare(
     caffeine-hal-ports
     GIT_REPOSITORY https://github.com/while-one/caffeine-hal-ports.git
-    GIT_TAG        v0.2.3
+    GIT_TAG        v0.2.5
     GIT_SUBMODULES
     "caffeine-build"
 )
@@ -71,8 +72,12 @@ endif()
 cfn_add_firmware(${PROJECT_NAME})
 
 # --- 6. Unit Testing ---
-if(CAFFEINE_PORT_BUILD_TESTS)
-    add_subdirectory(tests)
+option(CFN_APP_MVP_BUILD_TESTS "Build the unit tests for MVP app" OFF)
+if(PROJECT_IS_TOP_LEVEL AND CFN_APP_MVP_BUILD_TESTS)
+    include(CTest)
+    if(BUILD_TESTING)
+        add_subdirectory(tests)
+    endif()
 endif()
 
 # ==============================================================================
@@ -95,5 +100,43 @@ if(CLANG_FORMAT)
 endif()
 
 # 2. Static Analysis (analyze)
-# This will be refined once the full source tree is created in Phase 2/3
+find_program(CPPCHECK cppcheck)
+if(CPPCHECK)
+    add_custom_target(
+        ${PROJECT_NAME}-cppcheck
+        COMMAND ${CPPCHECK}
+        --project=${CMAKE_BINARY_DIR}/compile_commands.json
+        --enable=all
+        --suppress=missingInclude
+        --suppress=missingIncludeSystem
+        --suppress=unusedFunction
+        --suppress=*:*/_deps/*
+        --inline-suppr
+        --std=c11
+        --file-filter=${PROJECT_SOURCE_DIR}/src/*
+        COMMENT "Running cppcheck static analysis using compile_commands.json..."
+    )
+endif()
+
+find_program(CLANG_TIDY clang-tidy)
+if(CLANG_TIDY)
+    add_custom_target(
+        ${PROJECT_NAME}-tidy
+        COMMAND ${CLANG_TIDY}
+        -p=${CMAKE_BINARY_DIR}
+        --config-file=${PROJECT_SOURCE_DIR}/caffeine-build/config/coding/.clang-tidy
+        --header-filter="${PROJECT_SOURCE_DIR}/src/.*"
+        ${ALL_FORMAT_SOURCES}
+        COMMENT "Running clang-tidy static analysis using compile_commands.json..."
+    )
+endif()
+
 add_custom_target(${PROJECT_NAME}-analyze COMMENT "Running full static analysis suite...")
+if(TARGET ${PROJECT_NAME}-cppcheck)
+    add_dependencies(${PROJECT_NAME}-analyze ${PROJECT_NAME}-cppcheck)
+endif()
+if(TARGET ${PROJECT_NAME}-tidy)
+    add_dependencies(${PROJECT_NAME}-analyze ${PROJECT_NAME}-tidy)
+endif()
+
+
