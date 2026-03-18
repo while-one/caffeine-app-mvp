@@ -53,3 +53,50 @@ jobs:
 
     - name: Build ${{ matrix.preset }}
       run: ./caffeine-build/scripts/build.sh ${{ matrix.preset }}
+
+  build-and-test:
+    name: Native Build & Unit Tests
+    runs-on: ubuntu-24.04
+    needs: [lint-format]
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/caffeine-build/build-native:latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+    
+    - name: Install gcovr
+      run: apt-get update && apt-get install -y gcovr
+
+    - name: Configure CMake (Host Mock Tests)
+      run: cmake --preset tests-native-app -DFETCHCONTENT_FULLY_DISCONNECTED=OFF
+
+    - name: Build Tests
+      run: cmake --build build/tests-native-app
+
+    - name: Run Unit Tests (CTest)
+      working-directory: build/tests-native-app
+      run: ctest --output-on-failure -j 4
+
+    - name: Run Coverage
+      run: cmake --build build/tests-native-app --target caffeine-app-mvp-coverage
+
+    - name: PR Comment with Coverage
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          const fs = require('fs');
+          const coverage = fs.readFileSync('build/tests-native-app/coverage.txt', 'utf8');
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '### Code Coverage Report 📊\n```\n' + coverage + '\n```'
+          })

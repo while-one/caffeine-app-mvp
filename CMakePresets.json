@@ -39,7 +39,8 @@
       "inherits": "tests-native",
       "binaryDir": "${sourceDir}/build/tests-native-app",
       "cacheVariables": {
-        "PROJECT_NAME": "caffeine-app-mvp"
+        "PROJECT_NAME": "caffeine-app-mvp",
+        "CFN_APP_MVP_BUILD_TESTS": "ON"
       }
     }
   ]

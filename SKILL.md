@@ -31,7 +31,7 @@ You can customize specific hardware parameters (HSE/LSE clock frequencies and VD
 ### Writing Unit Tests
 1.  Place your GTest-based tests in `tests/app/`.
 2.  Ensure your tests are hardware-agnostic or use the `mock` HAL port for host-side verification.
-3.  Run tests using `./caffeine-build/scripts/build.sh tests-native`.
+3.  Run tests using `./caffeine-build/scripts/build.sh tests-native-app`.
 
 ## 3. Coding Standards
 
