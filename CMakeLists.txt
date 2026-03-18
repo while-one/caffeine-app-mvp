@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.23)
 
 # Placeholder project name and version
 project(caffeine-app-mvp
-        VERSION 0.0.1
+        VERSION 0.0.2
         LANGUAGES C ASM
         DESCRIPTION "Minimum Viable Product Blinky Application"
         HOMEPAGE_URL "https://github.com/while-one/caffeine-app-mvp"
