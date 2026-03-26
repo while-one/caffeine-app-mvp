@@ -12,7 +12,7 @@
 #include "cfn_hal_gpio_port.h"
 /* Example 1: Green LED on STM32F407 Discovery (PD12) */
 #define LED_GPIO_PORT CFN_HAL_GPIO_PORT_D
-#define LED_GPIO_PIN  CFN_HAL_GPIO_PIN_12
+#define LED_GPIO_PIN  CFN_HAL_GPIO_PIN_13
 #elif defined(BLINKY_STM32F417VG_HWV0001)
 #include "cfn_hal_gpio.h"
 #include "cfn_hal_gpio_port.h"
@@ -34,14 +34,14 @@ void bsp_led_init(void)
         .port = (void *) (uintptr_t) LED_GPIO_PORT,
     };
 
-    cfn_hal_gpio_pin_config_t config = { .pin_mask = LED_GPIO_PIN,
-                                         .mode = CFN_HAL_GPIO_CONFIG_MODE_OUTPUT_PP,
-                                         .pull = CFN_HAL_GPIO_CONFIG_PULL_NOPULL,
-                                         .speed = CFN_HAL_GPIO_CONFIG_SPEED_LOW,
-                                         .strength = CFN_HAL_GPIO_CONFIG_STRENGTH_LOW,
+    cfn_hal_gpio_pin_config_t config = { .pin_mask      = LED_GPIO_PIN,
+                                         .mode          = CFN_HAL_GPIO_CONFIG_MODE_OUTPUT_PP,
+                                         .pull          = CFN_HAL_GPIO_CONFIG_PULL_NOPULL,
+                                         .speed         = CFN_HAL_GPIO_CONFIG_SPEED_LOW,
+                                         .strength      = CFN_HAL_GPIO_CONFIG_STRENGTH_LOW,
                                          .default_state = CFN_HAL_GPIO_STATE_LOW };
 
-    (void) cfn_hal_gpio_construct(&led_driver, NULL, &phy);
+    (void) cfn_hal_gpio_construct(&led_driver, &phy, NULL, NULL, NULL);
     (void) cfn_hal_gpio_init(&led_driver);
     (void) cfn_hal_gpio_pin_config(&led_driver, &config);
 #else

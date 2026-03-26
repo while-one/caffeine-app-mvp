@@ -16,4 +16,6 @@ void bsp_led_init(void);
  */
 void bsp_led_toggle(void);
 
+void bsp_led_on(void);
+void bsp_led_off(void);
 #endif /* BSP_LED_H */
