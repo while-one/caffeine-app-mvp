@@ -17,21 +17,21 @@ Caffeine applications are strictly layered to ensure maximum portability and tes
 2.  If the feature requires hardware access, define a corresponding abstract interface in `src/bsp/`.
 3.  Implement the feature logic in `src/app/`, calling the abstract BSP functions.
 
-### Adding Support for a New Board
-1.  Create a new CMake preset in `CMakePresets.json` that inherits from the appropriate vendor/architecture base (e.g., `stm32f407-release`).
-2.  Update the BSP implementation (e.g., `src/bsp/bsp_led.c`) with a `#elif defined(YOUR_NEW_BOARD_MACRO)` block to map the abstract functions to the new board's physical pins.
-3.  Use the `build.sh` script to build for the new board preset.
+### Adding Support for a New Hardware Target
+1.  Define the hardware configuration in `caffeine-hal-ports` by creating a target `.cmake` script (e.g., `cmake/ports/stm32/stm32f4/my_target.cmake`).
+2.  Create a new CMake preset in the application's `CMakePresets.json` that sets `CFN_HAL_PORT_TARGET` to your new script.
+3.  Update the BSP implementation (e.g., `src/bsp/bsp_led.c`) to map the abstract functions to the target's physical pins.
+4.  Use the `build.sh` script to build for the new target preset.
 
 ### Overriding Hardware Parameters
 You can customize specific hardware parameters (HSE/LSE clock frequencies and VDD voltage) directly in your `CMakePresets.json`:
 1.  Add the relevant cache variables to your preset (e.g., `"CFN_HAL_CLOCK_HSE_HZ": "8000000"`).
-2.  These values will be injected into the port's `stm32f4xx_hal_conf.h` during the generation phase.
-3.  If omitted, the port will use its safe defaults (e.g., 25 MHz HSE).
+2.  These values will be injected into the vendor HAL configuration during the generation phase.
 
 ### Writing Unit Tests
-1.  Place your GTest-based tests in `tests/app/`.
-2.  Ensure your tests are hardware-agnostic or use the `mock` HAL port for host-side verification.
-3.  Run tests using `./caffeine-build/scripts/build.sh tests-native-app`.
+1.  Place your GTest-based tests in `tests/`.
+2.  Enable the global `CFN_BUILD_TESTS` flag to automatically link against the `caffeine::hal-mock` library for host-side verification.
+3.  Run tests using `./caffeine-build/scripts/build.sh unit-tests-gtest`.
 
 ## 3. Coding Standards
 

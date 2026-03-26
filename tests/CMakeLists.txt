@@ -36,10 +36,16 @@ if(TEST_SOURCES)
     target_link_options(${PROJECT_NAME}-test PRIVATE --coverage)
 
     # Link against GTest and the app's dependencies
+    if(TARGET caffeine::hal-mock)
+        set(HAL_DEP caffeine::hal caffeine::hal-mock)
+    else()
+        set(HAL_DEP caffeine::hal-ports)
+    endif()
+
     target_link_libraries(${PROJECT_NAME}-test
         PRIVATE
         ${PROJECT_NAME}-gmock_main
-        caffeine::hal-ports
+        ${HAL_DEP}
     )
 
     # Include app and bsp headers
