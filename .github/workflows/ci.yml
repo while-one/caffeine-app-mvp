@@ -16,7 +16,7 @@ jobs:
         submodules: recursive
 
     - name: Run Clang-Format Check
-      run: ./caffeine-build/scripts/build.sh linux-native caffeine-app-mvp-format
+      run: ./caffeine-build/scripts/build.sh unit-tests-gtest caffeine-app-mvp-format
 
   static-analysis:
     name: Static Analysis
@@ -27,7 +27,7 @@ jobs:
         submodules: recursive
 
     - name: Run Analysis
-      run: ./caffeine-build/scripts/build.sh linux-native caffeine-app-mvp-analyze
+      run: ./caffeine-build/scripts/build.sh unit-tests-gtest caffeine-app-mvp-analyze
 
   build-stm32:
     name: Build STM32 Targets
